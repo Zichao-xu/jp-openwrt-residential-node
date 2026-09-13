@@ -1,0 +1,43 @@
+config defaults
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option synflood_protect '1'
+
+config zone
+	option name 'lan'
+	list network 'lan'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+
+config zone
+	option name 'wifiwan'
+	list network 'wifiwan'
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option masq '1'
+	option mtu_fix '1'
+
+config zone
+	option name 'wg_exit'
+	list network 'wg_exit'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'ACCEPT'
+
+config forwarding
+	option src 'wg_exit'
+	option dest 'lan'
+
+config forwarding
+	option src 'wg_exit'
+	option dest 'wifiwan'
+
+config zone
+	option name 'tailscale'
+	list network 'tailscale'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'REJECT'

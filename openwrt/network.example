@@ -1,0 +1,36 @@
+config interface 'loopback'
+	option device 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config device
+	option name 'br-lan'
+	option type 'bridge'
+	list ports 'eth0'
+	list ports 'eth1'
+	list ports 'eth2'
+	list ports 'eth3'
+
+config interface 'lan'
+	option device 'br-lan'
+	option proto 'dhcp'
+	option metric '10'
+
+config interface 'wifiwan'
+	option proto 'dhcp'
+	option metric '50'
+
+config interface 'wg_exit'
+	option proto 'wireguard'
+	option private_key '<REMOTE_WG_PRIVATE_KEY>'
+	list addresses '10.77.0.2/32'
+
+config wireguard_wg_exit
+	option description 'home-gateway'
+	option public_key '<HOME_WG_PUBLIC_KEY>'
+	option endpoint_host 'vpn.example.net'
+	option endpoint_port '51821'
+	option persistent_keepalive '15'
+	option route_allowed_ips '1'
+	list allowed_ips '10.77.0.1/32'
