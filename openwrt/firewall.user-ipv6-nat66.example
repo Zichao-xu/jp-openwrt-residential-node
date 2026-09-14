@@ -1,0 +1,8 @@
+# Optional narrow NAT66 for selected WireGuard-originated IPv6 egress.
+# Use only when the remote OpenWrt has a working native IPv6 upstream
+# but no delegated prefix is available for the WireGuard tunnel.
+
+if command -v ip6tables >/dev/null 2>&1; then
+	ip6tables -t nat -C POSTROUTING -s fd77:77:77::/64 -o br-lan -j MASQUERADE 2>/dev/null || \
+		ip6tables -t nat -A POSTROUTING -s fd77:77:77::/64 -o br-lan -j MASQUERADE
+fi

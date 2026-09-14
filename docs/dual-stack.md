@@ -43,9 +43,21 @@ Requirements:
 - The home gateway routes only selected IPv6 proxy traffic to the remote peer.
 - If upstream IPv6 disappears, IPv4 still works.
 
-### Option C: NAT66 / NPTv6
+If the remote OpenWrt receives a source-specific IPv6 default route, disable source filtering on the upstream IPv6 client interface. Otherwise packets sourced from the WireGuard ULA prefix may be treated as unreachable before firewall/NAT rules see them.
 
-Avoid unless you know exactly why you need it. It adds complexity and can make failures harder to reason about. Prefer native prefix delegation when available.
+### Option C: Narrow NAT66
+
+Use only for selected WireGuard-originated IPv6 egress when native prefix delegation to the tunnel is not available.
+
+Recommended scope:
+
+```text
+source: fd77:77:77::/64
+out:    upstream bridge or WAN device
+target: MASQUERADE
+```
+
+Do not apply broad IPv6 masquerading to every interface. Keep IPv4 independent and keep the home gateway without a global IPv6 default route unless you intentionally add policy routing.
 
 ## WireGuard Template Delta
 
@@ -60,6 +72,8 @@ home peer allowed_ips:    fd77:77:77::2/128
 ```
 
 Do not add `::/0` until you have a deliberate IPv6 policy route or explicit proxy outbound.
+
+For a home gateway peer that must be capable of sending selected IPv6 traffic to the remote node, `::/0` may be added to the peer's AllowedIPs only when automatic route installation is disabled. This makes WireGuard cryptokey routing possible without changing the gateway's global IPv6 route table.
 
 ## Health Checks
 
@@ -76,3 +90,13 @@ IPv6 checks may be informational:
 - selected IPv6 egress test shows the expected residential ISP
 
 If IPv6 fails but IPv4 is healthy, the watchdog should not reboot the node.
+
+## Validation
+
+Minimum tests:
+
+- Remote OpenWrt can `ping6` a public IPv6 address through its upstream.
+- Home gateway can `ping6` the remote tunnel ULA.
+- A temporary single-destination IPv6 route on the home gateway can pass through the remote node.
+- The temporary route is removed after testing.
+- Home gateway IPv4 default route remains unchanged.
