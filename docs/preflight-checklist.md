@@ -46,14 +46,18 @@ Home gateway:
 - Dedicated WireGuard interface for the remote exit.
 - Existing tunnels and normal default route left unchanged.
 - Route only selected proxy traffic through the remote exit.
+- If enabling IPv6, validate it as a separate path after IPv4 passes.
+- IPv4 watchdogs, management access, and proxy rules must continue working when IPv6 is unavailable.
 
 ## Must-Test Before Shipping
 
 - Reboot returns online.
 - WireGuard handshake recovers.
+- IPv4 proxy path works before any IPv6 changes.
 - Tailscale rescue address is reachable from a separate network.
 - Wired DHCP has priority over Wi-Fi.
 - Wi-Fi fallback associates when wired is unavailable.
+- Optional IPv6 does not break IPv4 when upstream IPv6 is missing, filtered, or renumbered.
 - Long reset restores the golden configuration.
 - Login page works from desktop and mobile width.
 - Short iperf test does not overheat or exhaust memory.

@@ -1,0 +1,11 @@
+# Optional IPv6-only delta for openwrt/network.example.
+# Apply only after the IPv4 tunnel has been validated.
+
+config interface 'wg_exit'
+	list addresses 'fd77:77:77::2/128'
+
+config wireguard_wg_exit
+	list allowed_ips 'fd77:77:77::1/128'
+
+# Do not add ::/0 here unless the home gateway has a deliberate IPv6 policy route
+# or the proxy core explicitly selects this outbound for IPv6 traffic.

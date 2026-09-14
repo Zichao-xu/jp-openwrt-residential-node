@@ -29,6 +29,7 @@ authorized clients
 ## 仓库内容
 
 - `docs/architecture.md`：整体架构和流量边界。
+- `docs/dual-stack.md`：可选 IPv6/双栈设计，默认不影响 IPv4。
 - `docs/preflight-checklist.md`：寄出前检查清单。
 - `docs/recovery.md`：Tailscale 救援、watchdog、reset 黄金恢复。
 - `openwrt/`：脱敏 UCI 配置模板。
@@ -46,7 +47,8 @@ authorized clients
 3. 所有有线口合并成 DHCP client 桥，关闭本机 DHCP/DNS/AP。
 4. 配置 `wg_exit`：远端 OpenWrt 主动连回主网关。
 5. 主网关只对代理进程/指定流量走 `wg_exit`，不要改全局默认路由。
-6. 配置 Tailscale 为救援通道：不接管 DNS、不接收路由、不做 exit node。
-7. 配置有线优先、Wi-Fi 兜底。
-8. 部署 watchdog 和 reset 黄金恢复。
-9. 做短时打流、重启、断网恢复、reset 恢复演练。
+6. 如需双栈，先保持 IPv4-only 验收通过，再按 `docs/dual-stack.md` 增量开启 IPv6。
+7. 配置 Tailscale 为救援通道：不接管 DNS、不接收路由、不做 exit node。
+8. 配置有线优先、Wi-Fi 兜底。
+9. 部署 watchdog 和 reset 黄金恢复。
+10. 做短时打流、重启、断网恢复、reset 恢复演练。

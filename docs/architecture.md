@@ -33,12 +33,15 @@ Use documentation-only placeholders here. Replace them in your private deploymen
 ```text
 home wg_exit:       10.77.0.1/24
 remote wg_exit:     10.77.0.2/32
+optional IPv6 ULA:  fd77:77:77::1/64 and fd77:77:77::2/128
 home endpoint:      vpn.example.net:51821
 remote LAN DHCP:    assigned by upstream router
 tailscale rescue:   assigned by tailnet
 ```
 
 The home gateway peer may use `AllowedIPs = 0.0.0.0/0` for the remote peer, but route installation must be disabled. This lets explicitly selected traffic use the remote peer without changing the gateway's system default route.
+
+IPv6 is optional. Keep the IPv4 tunnel and IPv4 policy route working first. Add IPv6 as a separate address family after IPv4 validation, and do not make IPv4 health checks depend on IPv6.
 
 ## Traffic Boundary
 
@@ -47,6 +50,7 @@ The important rule is:
 ```text
 normal gateway traffic:  stays on normal WAN
 selected proxy traffic:  policy route -> wg_exit -> remote OpenWrt -> residential uplink
+optional IPv6 traffic:   separate IPv6 policy or explicit proxy outbound
 rescue management:       Tailscale only to the OpenWrt itself
 ```
 
