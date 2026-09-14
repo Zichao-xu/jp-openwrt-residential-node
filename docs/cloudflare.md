@@ -22,6 +22,8 @@ Zone:Zone:Read
 
 Prefer a token scoped to one zone.
 
+Validation should include both the provider API and DNS resolution from the remote node or controller. If the local workstation uses fake-IP DNS, do not treat local `dig` output as authoritative; prefer DoH or a clean resolver path.
+
 ## Cloudflare Tunnel
 
 Cloudflare Tunnel can expose LuCI or a maintenance page without inbound ports. Use it only with Cloudflare Access or another authentication layer.
@@ -38,6 +40,25 @@ Do not enable the tunnel service until:
 - Access policy is configured
 - the exposed origin is confirmed
 - WireGuard/Tailscale rescue still works independently
+
+Recommended Access policy:
+
+```text
+Application: jp-openwrt-rescue
+Destination: jp-op.example.com
+Action: Allow
+Include: Emails -> owner@example.com
+```
+
+Validate from a client without Cloudflare Access cookies:
+
+```sh
+curl -I -L --max-redirs 3 https://jp-op.example.com/
+```
+
+The first response should redirect to `*.cloudflareaccess.com`. It should not return the LuCI login page directly.
+
+On older OpenWrt packages, token-mode init scripts may pass the tunnel token as a process argument. That is usable for a sealed appliance, but a credentials-file setup is cleaner when supported by the package version.
 
 ## Operational Boundary
 
