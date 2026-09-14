@@ -29,6 +29,7 @@ authorized clients
 ## 仓库内容
 
 - `docs/architecture.md`：整体架构和流量边界。
+- `docs/cloudflare.md`：可选 Cloudflare Tunnel 与 IPv6 AAAA DDNS。
 - `docs/dual-stack.md`：可选 IPv6/双栈设计，默认不影响 IPv4。
 - `docs/preflight-checklist.md`：寄出前检查清单。
 - `docs/recovery.md`：Tailscale 救援、watchdog、reset 黄金恢复。
